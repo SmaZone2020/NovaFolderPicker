@@ -39,7 +39,7 @@
 
 您可以下载 `NovaFP.exe`，并将其与您的项目一起使用：
 
-[下载 NovaFP.exe](https://github.com/SmaZone2020/NovaFolderPicker/releases/download/ovo/NovaFP.exe)
+[下载 NovaFP.exe](https://github.com/SmaZone2020/NovaFolderPicker/releases/download/o.o/NovaFP.exe)
 
 ### 集成说明
 
