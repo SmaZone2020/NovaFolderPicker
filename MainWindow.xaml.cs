@@ -9,13 +9,13 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using System.IO.Pipes;
 
-
 namespace NovaFolderPicker
 {
     public partial class MainWindow : Window
     {
         private string currentPath;
         public string selectPath;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -57,7 +57,6 @@ namespace NovaFolderPicker
             return false; // 默认使用暗色主题
         }
 
-
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (currentPath != "/Home")
@@ -82,19 +81,18 @@ namespace NovaFolderPicker
             if (currentPath == "/Home")
             {
                 // 展示系统特定文件夹
-                ListViewFolder.Items.Add(new ListViewItem { Content = "Documents" });
-                ListViewFolder.Items.Add(new ListViewItem { Content = "Pictures" });
-                ListViewFolder.Items.Add(new ListViewItem { Content = "Videos" });
-                ListViewFolder.Items.Add(new ListViewItem { Content = "Downloads" });
-                ListViewFolder.Items.Add(new ListViewItem { Content = "Music" });
-                ListViewFolder.Items.Add(new ListViewItem { Content = "Desktop" });
+                ListViewFolder.Items.Add("📄 Documents");
+                ListViewFolder.Items.Add("🌇 Pictures");
+                ListViewFolder.Items.Add("📽️ Videos");
+                ListViewFolder.Items.Add("👇 Downloads");
+                ListViewFolder.Items.Add("🎵 Music");
+                ListViewFolder.Items.Add("💻 Desktop");
                 ListViewFolder.Items.Add(new Separator());
                 foreach (var drive in DriveInfo.GetDrives())
                 {
                     if (drive.IsReady)
                     {
-                        var driveItem = new ListViewItem { Content = $"{drive.Name}", ToolTip = $"{drive.TotalFreeSpace / (1024 * 1024 * 1024)}GB / {drive.TotalSize / (1024 * 1024 * 1024)}GB" };
-                        ListViewFolder.Items.Add(driveItem);
+                        ListViewFolder.Items.Add(drive.Name);
                     }
                 }
             }
@@ -103,8 +101,7 @@ namespace NovaFolderPicker
                 var directories = Directory.GetDirectories(currentPath);
                 foreach (var dir in directories)
                 {
-                    var directoryItem = new ListViewItem { Content = Path.GetFileName(dir) };
-                    ListViewFolder.Items.Add(directoryItem);
+                    ListViewFolder.Items.Add(Path.GetFileName(dir));
                 }
             }
             BTN_NEWFOLDER.IsEnabled = Directory.Exists(currentPath);
@@ -113,22 +110,21 @@ namespace NovaFolderPicker
 
         private void ListViewFolder_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (ListViewFolder.SelectedItem is ListViewItem selectedItem)
+            if (ListViewFolder.SelectedItem is string selectedContent)
             {
-                var selectedContent = selectedItem.Content.ToString();
                 if (currentPath == "/Home")
                 {
-                    if (selectedContent == "Documents")
+                    if (selectedContent == "📄 Documents")
                         currentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-                    else if (selectedContent == "Pictures")
+                    else if (selectedContent == "🌇 Pictures")
                         currentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
-                    else if (selectedContent == "Videos")
+                    else if (selectedContent == "📽️ Videos")
                         currentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos));
-                    else if (selectedContent == "Downloads")
+                    else if (selectedContent == "👇 Downloads")
                         currentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-                    else if (selectedContent == "Music")
+                    else if (selectedContent == "🎵 Music")
                         currentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
-                    else if (selectedContent == "Desktop")
+                    else if (selectedContent == "💻 Desktop")
                         currentPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
 
                     if (selectedContent.Contains(":"))
@@ -160,12 +156,11 @@ namespace NovaFolderPicker
 
         private void ListViewFolder_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ListViewFolder.SelectedItem is ListViewItem selectedItem)
+            if (ListViewFolder.SelectedItem is string selectedContent)
             {
                 if (currentPath == "/Home")
                 {
-                    var selectedContent = selectedItem.Content.ToString();
-                    var selectPath_ = "";
+                    string selectPath_ = "";
 
                     if (selectedContent == "Documents")
                         selectPath_ = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
@@ -191,11 +186,10 @@ namespace NovaFolderPicker
                 }
                 else
                 {
-                    var tempP = Path.Combine(currentPath, selectedItem.Content.ToString());
+                    var tempP = Path.Combine(currentPath, selectedContent);
                     selectPath = tempP;
                     BTN_OK.IsEnabled = Directory.Exists(tempP);
                 }
-
             }
         }
 
